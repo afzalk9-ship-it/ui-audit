@@ -1,0 +1,34 @@
+# malomatia UI Audit — free automated browser testing (Chrome, Edge, Firefox, Safari/WebKit)
+# Runs on every pull request and on demand (Actions → malomatia UI Audit → Run workflow).
+# Results appear automatically in malomatia UI Audit Studio.
+name: malomatia UI Audit
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  ui-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install test browsers
+        run: |
+          mkdir -p .malomatia-ci && cd .malomatia-ci
+          npm init -y > /dev/null
+          npm i playwright@1 @axe-core/playwright@4 > /dev/null
+          npx playwright install --with-deps chromium firefox webkit
+          npx playwright install msedge || echo "Edge could not be installed"
+          curl -fsSL https://malomatia-ux-audit-hub.lovable.app/ci/ui-audit.mjs -o run.mjs
+      - name: Run malomatia UI audit
+        working-directory: .malomatia-ci
+        env:
+          MALOMATIA_AUDIT_TOKEN: ${{ secrets.MALOMATIA_AUDIT_TOKEN }}
+          MALOMATIA_AUDIT_ID: "c4p49q4a"
+          MALOMATIA_API: https://malomatia-ux-audit-hub.lovable.app/api/public/ui-test
+          TEST_URLS: "https://beta.npc.qa/EN/Pages/default.aspx?g=c260ef26-23a9-40aa-9ff9-cd5200e77df3"
+          TEST_URL_AR: ""
+          REPO_DIR: ${{ github.workspace }}
+        run: node run.mjs
