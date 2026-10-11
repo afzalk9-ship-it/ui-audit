@@ -29,6 +29,6 @@ jobs:
           MALOMATIA_AUDIT_ID: "c4p49q4a"
           MALOMATIA_API: https://malomatia-ux-audit-hub.lovable.app/api/public/ui-test
           TEST_URLS: "https://beta.npc.qa/EN/Pages/default.aspx?g=c260ef26-23a9-40aa-9ff9-cd5200e77df3"
-          TEST_URL_AR: ""
+          TEST_URL_AR: "https://beta.npc.qa/AR/Pages/default.aspx?g=c260ef26-23a9-40aa-9ff9-cd5200e77df3"
           REPO_DIR: ${{ github.workspace }}
         run: node run.mjs
