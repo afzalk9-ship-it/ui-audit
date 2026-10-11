@@ -15,15 +15,9 @@ jobs:
         with:
           node-version: 20
       - name: Install test browsers
-        run: |
-          mkdir -p .malomatia-ci && cd .malomatia-ci
-          npm init -y > /dev/null
-          npm i playwright@1 @axe-core/playwright@4 > /dev/null
-          npx playwright install --with-deps chromium firefox webkit
-          npx playwright install msedge || echo "Edge could not be installed"
-          curl -fsSL https://malomatia-ux-audit-hub.lovable.app/ci/ui-audit.mjs -o run.mjs
+        run: curl -fsSL https://malomatia-ux-audit-hub.lovable.app/ci/install.sh | bash -s https://malomatia-ux-audit-hub.lovable.app
       - name: Run malomatia UI audit
-        working-directory: .malomatia-ci
+        working-directory: malomatia-ci
         env:
           MALOMATIA_AUDIT_TOKEN: ${{ secrets.MALOMATIA_AUDIT_TOKEN }}
           MALOMATIA_AUDIT_ID: "c4p49q4a"
